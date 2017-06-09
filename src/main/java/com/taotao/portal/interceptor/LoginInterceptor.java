@@ -1,0 +1,57 @@
+package com.taotao.portal.interceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.taotao.pojo.TbUser;
+import com.taotao.portal.service.UserService;
+
+// 拦截器，拦截登录请求
+public class LoginInterceptor implements HandlerInterceptor { 
+	//拦截器是运行在mvc里面的,注意父子容器
+	
+	@Autowired
+	private UserService userService;
+	
+	@Value("${SSO_LOGIN_URL}")
+	private String SSO_LOGIN_URL ;
+	
+	// 调用handle()方法之前调用--核心处理
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+			throws Exception {
+		System.out.println("拦截器中--preHandle" );
+		TbUser user = userService.getUserByToken(request, response);
+		System.out.println("user=" + user );
+		if(user == null ){ // 重新登录
+			// 1、重定向到登录页面
+			response.sendRedirect(SSO_LOGIN_URL  + "?redirectURL="+ request.getRequestURL() ); 
+			// 2、到达PageController的login()方法
+			// 3、在base-v1.js中获取redirectURL
+			return false;
+		}
+		//将登陆用户存入request
+		request.setAttribute("user", user);
+		// 'session'没有过期
+		return true ;// 让其执行
+	}
+	// 调用handle()方法之后、返回ModelAndView之前调用
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+			ModelAndView modelAndView) throws Exception {
+		
+	}
+
+	@Override
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+			throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+}

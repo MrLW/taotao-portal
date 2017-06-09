@@ -1,0 +1,17 @@
+SEARCH_BASE_URL=http://localhost:8083/search/q
+
+REST_BASE_URL=http://localhost:8081/rest
+
+REST_ITEM_BASE_INFO_URL=/item/base/
+
+REST_ITEM_DESC_URL=/item/desc/
+
+REST_ITEM_PARAM_URL=/item/param/
+
+STATIC_PAGE_PATH=E:/code/javaee_project/taotao/statichtml
+
+SSO_BASE_URL=http://localhost:8084
+
+SSO_TOKEN_URL=/user/token/
+
+SSO_LOGIN_URL=http://localhost:8084/user/page/login
